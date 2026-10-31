@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Win32 layer: gamma ramps per display, registry (autostart, gamma range), HDR / Night light / remote session detection -->
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <RootNamespace>Eventide.Platform.Windows</RootNamespace>
+    <AssemblyName>Eventide.Platform.Windows</AssemblyName>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Eventide.Core\Eventide.Core.csproj" />
+  </ItemGroup>
+
+</Project>

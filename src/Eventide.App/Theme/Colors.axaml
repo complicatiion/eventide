@@ -1,0 +1,71 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!--
+    Eventide design tokens – Color Hunt palette #202734 · #36415A · #B7D894 · #E0F8C7 (dark only).
+    Body text is a neutral near-white so the UI does not look green-tinted; #E0F8C7 is reserved for highlights.
+    Contrast of text tokens on #202734 ≥ 4.5:1 (WCAG AA), see docs/DESIGN.md.
+  -->
+  <Color x:Key="ColorBgApp">#202734</Color>
+  <Color x:Key="ColorBgSidebar">#1B2130</Color>
+  <Color x:Key="ColorSurfaceCard">#262F40</Color>
+  <Color x:Key="ColorSurfaceRaised">#2D3649</Color>
+  <Color x:Key="ColorSurfaceHover">#36415A</Color>
+  <Color x:Key="ColorBorder">#36415A</Color>
+  <Color x:Key="ColorAccent">#B7D894</Color>
+  <Color x:Key="ColorAccentHover">#C6E2A8</Color>
+  <Color x:Key="ColorAccentPressed">#A3C67F</Color>
+  <Color x:Key="ColorAccentSoft">#2F3B35</Color>
+  <Color x:Key="ColorOnAccent">#1B2130</Color>
+  <Color x:Key="ColorHighlight">#E0F8C7</Color>
+  <Color x:Key="ColorTextPrimary">#EEF2F7</Color>
+  <Color x:Key="ColorTextSecondary">#A9B4C6</Color>
+  <Color x:Key="ColorTextDisabled">#6E7891</Color>
+  <Color x:Key="ColorWarning">#F2C46D</Color>
+  <Color x:Key="ColorWarningSoft">#3A3428</Color>
+  <Color x:Key="ColorInfo">#8FB8E8</Color>
+  <Color x:Key="ColorInfoSoft">#263247</Color>
+
+  <SolidColorBrush x:Key="BrushBgApp" Color="#202734" />
+  <SolidColorBrush x:Key="BrushBgSidebar" Color="#1B2130" />
+  <SolidColorBrush x:Key="BrushSurfaceCard" Color="#262F40" />
+  <SolidColorBrush x:Key="BrushSurfaceRaised" Color="#2D3649" />
+  <SolidColorBrush x:Key="BrushSurfaceHover" Color="#36415A" />
+  <SolidColorBrush x:Key="BrushBorder" Color="#36415A" />
+  <SolidColorBrush x:Key="BrushAccent" Color="#B7D894" />
+  <SolidColorBrush x:Key="BrushAccentHover" Color="#C6E2A8" />
+  <SolidColorBrush x:Key="BrushAccentPressed" Color="#A3C67F" />
+  <SolidColorBrush x:Key="BrushAccentSoft" Color="#2F3B35" />
+  <SolidColorBrush x:Key="BrushOnAccent" Color="#1B2130" />
+  <SolidColorBrush x:Key="BrushHighlight" Color="#E0F8C7" />
+  <SolidColorBrush x:Key="BrushTextPrimary" Color="#EEF2F7" />
+  <SolidColorBrush x:Key="BrushTextSecondary" Color="#A9B4C6" />
+  <SolidColorBrush x:Key="BrushTextDisabled" Color="#6E7891" />
+  <SolidColorBrush x:Key="BrushWarning" Color="#F2C46D" />
+  <SolidColorBrush x:Key="BrushWarningSoft" Color="#3A3428" />
+  <SolidColorBrush x:Key="BrushInfo" Color="#8FB8E8" />
+  <SolidColorBrush x:Key="BrushDanger" Color="#F28B82" />
+  <SolidColorBrush x:Key="BrushDangerSoft" Color="#4A2328" />
+  <SolidColorBrush x:Key="BrushInfoSoft" Color="#263247" />
+
+  <!-- Dusk gradient: day white → night accent (hero card, temperature bar) -->
+  <LinearGradientBrush x:Key="BrushDusk" StartPoint="0%,0%" EndPoint="100%,0%">
+    <GradientStop Offset="0" Color="#FFB070" />
+    <GradientStop Offset="0.5" Color="#FFE0B8" />
+    <GradientStop Offset="1" Color="#FFFFFF" />
+  </LinearGradientBrush>
+  <LinearGradientBrush x:Key="BrushHero" StartPoint="0%,0%" EndPoint="100%,100%">
+    <GradientStop Offset="0" Color="#2D3649" />
+    <GradientStop Offset="1" Color="#262F40" />
+  </LinearGradientBrush>
+
+  <!-- Fluent overrides: dark knob on the accent-coloured switch track (white on #B7D894 would be hard to see) -->
+  <SolidColorBrush x:Key="ToggleSwitchKnobFillOn" Color="#1B2130" />
+  <SolidColorBrush x:Key="ToggleSwitchKnobFillOnPointerOver" Color="#1B2130" />
+  <SolidColorBrush x:Key="ToggleSwitchKnobFillOnPressed" Color="#1B2130" />
+  <SolidColorBrush x:Key="RadioButtonCheckGlyphFill" Color="#1B2130" />
+  <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundChecked" Color="#1B2130" />
+
+  <FontFamily x:Key="MonoFont">Cascadia Mono, Consolas, Courier New</FontFamily>
+
+</ResourceDictionary>

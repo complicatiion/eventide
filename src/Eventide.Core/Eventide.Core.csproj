@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Platform-neutral logic: colour temperature, sun times, schedule, settings, IPC contract, strings. No package references. -->
+  <PropertyGroup>
+    <RootNamespace>Eventide.Core</RootNamespace>
+    <AssemblyName>Eventide.Core</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Eventide.Core.Tests" />
+  </ItemGroup>
+
+</Project>

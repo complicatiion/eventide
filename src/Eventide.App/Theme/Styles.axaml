@@ -1,0 +1,362 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!-- ===================================================== Base -->
+  <Style Selector="Window">
+    <Setter Property="Background" Value="{DynamicResource BrushBgApp}" />
+    <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
+  </Style>
+  <Style Selector="TextBlock">
+    <Setter Property="TextWrapping" Value="Wrap" />
+  </Style>
+  <Style Selector="TextBlock.h1">
+    <Setter Property="FontSize" Value="24" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="TextWrapping" Value="NoWrap" />
+  </Style>
+  <Style Selector="TextBlock.h2">
+    <Setter Property="FontSize" Value="15" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+  </Style>
+  <Style Selector="TextBlock.hero">
+    <Setter Property="FontSize" Value="30" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="Foreground" Value="{DynamicResource BrushHighlight}" />
+  </Style>
+  <Style Selector="TextBlock.kpi">
+    <Setter Property="FontSize" Value="22" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+  </Style>
+  <Style Selector="TextBlock.muted">
+    <Setter Property="Foreground" Value="{DynamicResource BrushTextSecondary}" />
+  </Style>
+  <Style Selector="TextBlock.small">
+    <Setter Property="FontSize" Value="12" />
+  </Style>
+  <Style Selector="TextBlock.accent">
+    <Setter Property="Foreground" Value="{DynamicResource BrushAccent}" />
+  </Style>
+  <!-- Card / section headings (Location, Transition, Custom value, Night colour temperature, Third-party …) -->
+  <Style Selector="TextBlock.section">
+    <Setter Property="FontSize" Value="15" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="Foreground" Value="{DynamicResource BrushAccent}" />
+    <Setter Property="Margin" Value="0,0,0,10" />
+  </Style>
+  <Style Selector="TextBlock.mono">
+    <Setter Property="FontFamily" Value="{DynamicResource MonoFont}" />
+  </Style>
+  <Style Selector="PathIcon">
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="Width" Value="16" />
+    <Setter Property="Height" Value="16" />
+  </Style>
+  <!-- Small round "i" in front of explanatory texts, always accent green -->
+  <Style Selector="PathIcon.info">
+    <Setter Property="Width" Value="14" />
+    <Setter Property="Height" Value="14" />
+    <Setter Property="Margin" Value="0,1,8,0" />
+    <Setter Property="VerticalAlignment" Value="Top" />
+    <Setter Property="Foreground" Value="{DynamicResource BrushAccent}" />
+  </Style>
+
+  <!-- Page change: fade in and slide up a little (start values are set from MainWindow.axaml.cs) -->
+  <Style Selector="StackPanel.page">
+    <Setter Property="Transitions">
+      <Transitions>
+        <DoubleTransition Property="Opacity" Duration="0:0:0.22" Easing="CubicEaseOut" />
+        <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.26" Easing="CubicEaseOut" />
+      </Transitions>
+    </Setter>
+  </Style>
+
+  <!-- ===================================================== Surfaces -->
+  <Style Selector="Border.card">
+    <Setter Property="Background" Value="{DynamicResource BrushSurfaceCard}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource BrushBorder}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="12" />
+    <Setter Property="Padding" Value="20" />
+  </Style>
+  <Style Selector="Border.hero">
+    <Setter Property="Background" Value="{DynamicResource BrushHero}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource BrushBorder}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="14" />
+    <Setter Property="Padding" Value="24" />
+  </Style>
+  <Style Selector="Border.divider">
+    <Setter Property="Height" Value="1" />
+    <Setter Property="Background" Value="{DynamicResource BrushBorder}" />
+    <Setter Property="Margin" Value="0,14" />
+  </Style>
+  <Style Selector="Border.pill">
+    <Setter Property="CornerRadius" Value="999" />
+    <Setter Property="Padding" Value="10,3" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="Background" Value="{DynamicResource BrushAccentSoft}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource BrushAccent}" />
+    <Setter Property="BorderThickness" Value="1" />
+  </Style>
+  <Style Selector="Border.pill > TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource BrushAccent}" />
+    <Setter Property="FontSize" Value="12" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="TextWrapping" Value="NoWrap" />
+  </Style>
+  <Style Selector="Border.pill.neutral">
+    <Setter Property="Background" Value="{DynamicResource BrushSurfaceRaised}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource BrushBorder}" />
+  </Style>
+  <Style Selector="Border.pill.neutral > TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource BrushTextSecondary}" />
+  </Style>
+  <!-- Status pills: success (accent) and error (soft red, same build as the green pill) -->
+  <Style Selector="Border.pill.ok">
+    <Setter Property="Background" Value="{DynamicResource BrushAccentSoft}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource BrushAccent}" />
+  </Style>
+  <Style Selector="Border.pill.ok > TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource BrushAccent}" />
+  </Style>
+  <Style Selector="Border.pill.danger">
+    <Setter Property="Background" Value="{DynamicResource BrushDangerSoft}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource BrushDanger}" />
+  </Style>
+  <Style Selector="Border.pill.danger > TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource BrushDanger}" />
+  </Style>
+  <Style Selector="Border.notice">
+    <Setter Property="CornerRadius" Value="10" />
+    <Setter Property="Padding" Value="14,11" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="Background" Value="{DynamicResource BrushWarningSoft}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource BrushWarning}" />
+  </Style>
+  <Style Selector="Border.notice PathIcon">
+    <Setter Property="Foreground" Value="{DynamicResource BrushWarning}" />
+  </Style>
+  <Style Selector="Border.notice.info">
+    <Setter Property="Background" Value="{DynamicResource BrushInfoSoft}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource BrushInfo}" />
+  </Style>
+  <Style Selector="Border.notice.info PathIcon">
+    <Setter Property="Foreground" Value="{DynamicResource BrushInfo}" />
+  </Style>
+  <Style Selector="Border.swatch">
+    <Setter Property="CornerRadius" Value="10" />
+    <Setter Property="BorderBrush" Value="{DynamicResource BrushBorder}" />
+    <Setter Property="BorderThickness" Value="1" />
+  </Style>
+
+  <!-- ===================================================== Buttons (icon left of the text, see README) -->
+  <Style Selector="Button">
+    <Setter Property="CornerRadius" Value="8" />
+    <Setter Property="Padding" Value="14,8" />
+    <Setter Property="Background" Value="{DynamicResource BrushSurfaceRaised}" />
+    <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource BrushBorder}" />
+    <Setter Property="BorderThickness" Value="1" />
+  </Style>
+  <Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource BrushSurfaceHover}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource BrushBorder}" />
+    <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
+  </Style>
+  <Style Selector="Button:pressed /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource BrushBorder}" />
+  </Style>
+  <Style Selector="Button:disabled /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource BrushSurfaceCard}" />
+    <Setter Property="Foreground" Value="{DynamicResource BrushTextDisabled}" />
+  </Style>
+
+  <!-- Status page: on/off, pause and resume always the same width -->
+  <Style Selector="Button.action">
+    <Setter Property="MinWidth" Value="180" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+  </Style>
+
+  <!-- Same width for stacked / related actions (gamma range, open folder) -->
+  <Style Selector="Button.wide">
+    <Setter Property="MinWidth" Value="190" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+  </Style>
+
+  <!-- Main action: filled accent, dark text (contrast 10:1) -->
+  <Style Selector="Button.primary">
+    <Setter Property="Background" Value="{DynamicResource BrushAccent}" />
+    <Setter Property="Foreground" Value="{DynamicResource BrushOnAccent}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource BrushAccent}" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+  </Style>
+  <Style Selector="Button.primary:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource BrushAccentHover}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource BrushAccentHover}" />
+    <Setter Property="Foreground" Value="{DynamicResource BrushOnAccent}" />
+  </Style>
+  <Style Selector="Button.primary:pressed /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource BrushAccentPressed}" />
+  </Style>
+  <Style Selector="Button.primary:disabled /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource BrushSurfaceRaised}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource BrushBorder}" />
+    <Setter Property="Foreground" Value="{DynamicResource BrushTextDisabled}" />
+  </Style>
+
+  <!-- Quiet text button (links on the About page) -->
+  <Style Selector="Button.ghost">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="Foreground" Value="{DynamicResource BrushAccent}" />
+  </Style>
+  <Style Selector="Button.ghost:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource BrushAccentSoft}" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="Foreground" Value="{DynamicResource BrushAccent}" />
+  </Style>
+
+  <!-- ===================================================== Sidebar navigation (RadioButton) -->
+  <Style Selector="RadioButton.nav">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Foreground" Value="{DynamicResource BrushTextSecondary}" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Name="bg" Background="{TemplateBinding Background}" CornerRadius="8" Padding="12,10">
+          <Grid ColumnDefinitions="Auto,*">
+            <Border Name="marker" Width="3" Height="18" CornerRadius="2" Margin="-12,0,9,0"
+                    Background="Transparent" VerticalAlignment="Center" />
+            <ContentPresenter Grid.Column="1" Content="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}" />
+          </Grid>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="RadioButton.nav:pointerover /template/ Border#bg">
+    <Setter Property="Background" Value="{DynamicResource BrushSurfaceRaised}" />
+  </Style>
+  <Style Selector="RadioButton.nav:checked">
+    <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
+  </Style>
+  <Style Selector="RadioButton.nav:checked /template/ Border#bg">
+    <Setter Property="Background" Value="{DynamicResource BrushAccentSoft}" />
+  </Style>
+  <Style Selector="RadioButton.nav:checked /template/ Border#marker">
+    <Setter Property="Background" Value="{DynamicResource BrushAccent}" />
+  </Style>
+  <Style Selector="RadioButton.nav PathIcon">
+    <Setter Property="Width" Value="18" />
+    <Setter Property="Height" Value="18" />
+    <Setter Property="Foreground" Value="{DynamicResource BrushTextSecondary}" />
+  </Style>
+  <Style Selector="RadioButton.nav:checked PathIcon">
+    <Setter Property="Foreground" Value="{DynamicResource BrushAccent}" />
+  </Style>
+
+  <!-- ===================================================== Choice cards (mode, intensity) -->
+  <Style Selector="RadioButton.choice">
+    <Setter Property="Background" Value="{DynamicResource BrushSurfaceCard}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource BrushBorder}" />
+    <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="VerticalAlignment" Value="Stretch" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Name="bg" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="1.5" CornerRadius="12" Padding="16,14">
+          <Grid ColumnDefinitions="*,Auto">
+            <ContentPresenter Content="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}" />
+            <Border Name="dot" Grid.Column="1" Width="20" Height="20" CornerRadius="10" BorderThickness="1.5"
+                    BorderBrush="{DynamicResource BrushTextDisabled}" VerticalAlignment="Top" Margin="10,0,0,0">
+              <Ellipse Name="dotFill" Width="10" Height="10" Fill="Transparent" />
+            </Border>
+          </Grid>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="RadioButton.choice:pointerover /template/ Border#bg">
+    <Setter Property="Background" Value="{DynamicResource BrushSurfaceRaised}" />
+  </Style>
+  <Style Selector="RadioButton.choice:checked /template/ Border#bg">
+    <Setter Property="Background" Value="{DynamicResource BrushAccentSoft}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource BrushAccent}" />
+  </Style>
+  <Style Selector="RadioButton.choice:checked /template/ Border#dot">
+    <Setter Property="BorderBrush" Value="{DynamicResource BrushAccent}" />
+  </Style>
+  <Style Selector="RadioButton.choice:checked /template/ Ellipse#dotFill">
+    <Setter Property="Fill" Value="{DynamicResource BrushAccent}" />
+  </Style>
+  <Style Selector="RadioButton.choice PathIcon">
+    <Setter Property="Width" Value="22" />
+    <Setter Property="Height" Value="22" />
+    <Setter Property="Foreground" Value="{DynamicResource BrushTextSecondary}" />
+  </Style>
+  <Style Selector="RadioButton.choice:checked PathIcon">
+    <Setter Property="Foreground" Value="{DynamicResource BrushAccent}" />
+  </Style>
+
+  <!-- ===================================================== Chips (pause durations) -->
+  <Style Selector="RadioButton.chip">
+    <Setter Property="Background" Value="{DynamicResource BrushSurfaceRaised}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource BrushBorder}" />
+    <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Name="bg" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="1" CornerRadius="999" Padding="12,6">
+          <ContentPresenter Content="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}" />
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="RadioButton.chip:pointerover /template/ Border#bg">
+    <Setter Property="Background" Value="{DynamicResource BrushSurfaceHover}" />
+  </Style>
+  <Style Selector="RadioButton.chip:checked">
+    <Setter Property="Foreground" Value="{DynamicResource BrushAccent}" />
+  </Style>
+  <Style Selector="RadioButton.chip:checked /template/ Border#bg">
+    <Setter Property="Background" Value="{DynamicResource BrushAccentSoft}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource BrushAccent}" />
+  </Style>
+  <Style Selector="RadioButton.chip TextBlock">
+    <Setter Property="TextWrapping" Value="NoWrap" />
+    <Setter Property="FontWeight" Value="Medium" />
+  </Style>
+
+  <!-- ===================================================== Inputs -->
+  <Style Selector="TextBox">
+    <Setter Property="CornerRadius" Value="8" />
+    <Setter Property="Padding" Value="10,7" />
+  </Style>
+  <Style Selector="ComboBox">
+    <Setter Property="CornerRadius" Value="8" />
+    <Setter Property="MinWidth" Value="240" />
+  </Style>
+  <Style Selector="NumericUpDown">
+    <Setter Property="CornerRadius" Value="8" />
+  </Style>
+  <Style Selector="TimePicker">
+    <Setter Property="CornerRadius" Value="8" />
+  </Style>
+  <Style Selector="Slider">
+    <Setter Property="Foreground" Value="{DynamicResource BrushAccent}" />
+  </Style>
+  <Style Selector="ToggleSwitch">
+    <Setter Property="OnContent" Value="" />
+    <Setter Property="OffContent" Value="" />
+  </Style>
+
+  <!-- ===================================================== Settings rows -->
+  <Style Selector="Grid.row">
+    <Setter Property="Margin" Value="0,2" />
+  </Style>
+
+</Styles>

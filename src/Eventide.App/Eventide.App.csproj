@@ -1,0 +1,109 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    One EXE, two modes:
+      Eventide.exe (no argument)   : tray (Windows Forms NotifyIcon, gamma engine). Avalonia is never loaded in this mode.
+      Eventide.exe with "settings" : settings window (Avalonia), separate process, ends when the window closes.
+      (see Program.cs for all arguments)
+  -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+    <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
+    <RootNamespace>Eventide.App</RootNamespace>
+    <AssemblyName>Eventide</AssemblyName>
+    <AssemblyTitle>Eventide</AssemblyTitle>
+    <Description>Eventide – blue light filter for the Windows system tray</Description>
+    <ApplicationIcon>Assets\eventide.ico</ApplicationIcon>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <UseWindowsForms>true</UseWindowsForms>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <AvaloniaUseCompiledBindingsByDefault>false</AvaloniaUseCompiledBindingsByDefault>
+    <!-- Low idle memory for the always-running tray -->
+    <ServerGarbageCollection>false</ServerGarbageCollection>
+    <ConcurrentGarbageCollection>false</ConcurrentGarbageCollection>
+    <TieredPGO>true</TieredPGO>
+  </PropertyGroup>
+
+  <!--
+    Release builds are self-contained (no .NET runtime needed on the target PC) so the normal build folder
+    bin\Release\net10.0-windows10.0.19041.0\win-x64\ is directly the input of the installer.
+    RuntimeIdentifiers (plural) is set for every configuration so NuGet restore always contains win-x64.
+  -->
+  <PropertyGroup>
+    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>true</SelfContained>
+  </PropertyGroup>
+
+  <!-- Windows Forms and Avalonia share type names (Application, Button, Color …): no implicit WinForms usings. -->
+  <ItemGroup>
+    <Using Remove="System.Windows.Forms" />
+    <Using Remove="System.Drawing" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <RuntimeHostConfigurationOption Include="System.GC.ConserveMemory" Value="7" />
+    <RuntimeHostConfigurationOption Include="System.GC.RetainVM" Value="false" />
+  </ItemGroup>
+
+  <!-- Tray icons and menu images: embedded resources (read by Windows Forms) -->
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\tray-*.ico" LogicalName="Eventide.Assets.%(Filename)%(Extension)" />
+    <EmbeddedResource Include="Assets\eventide.ico" LogicalName="Eventide.Assets.eventide.ico" />
+    <EmbeddedResource Include="Assets\menu\*.png" LogicalName="Eventide.Assets.menu.%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <!-- Settings window assets (Avalonia) -->
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\logo-accent.png" />
+    <AvaloniaResource Include="Assets\app-256.png" />
+    <AvaloniaResource Include="Assets\eventide.ico" />
+    <AvaloniaResource Include="Assets\flag-*.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" />
+    <PackageReference Include="Avalonia.Desktop" />
+    <PackageReference Include="Avalonia.Themes.Fluent" />
+    <PackageReference Include="Avalonia.Fonts.Inter" />
+    <PackageReference Include="Avalonia.Diagnostics" Condition="'$(Configuration)' == 'Debug'" />
+    <PackageReference Include="CommunityToolkit.Mvvm" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Eventide.Core\Eventide.Core.csproj" />
+    <ProjectReference Include="..\Eventide.Platform.Windows\Eventide.Platform.Windows.csproj" />
+  </ItemGroup>
+
+  <!-- Shipped next to the app: licenses (About page) and README -->
+  <ItemGroup>
+    <None Include="..\..\licenses\**\*" Link="licenses\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <None Include="..\..\README.md" Link="README.md" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <!--
+    Installer: after every Release build, Inno Setup (ISCC) compiles build\installer\eventide.iss from the build folder.
+    Output: artifacts\eventide_v<version>_setup.exe. Skipped (warning only) when Inno Setup 6 is not installed;
+    switch off with /p:EventideSkipInstaller=true (publish.ps1, CI).
+  -->
+  <Target Name="EventideInstaller" AfterTargets="Build"
+          Condition="'$(Configuration)' == 'Release' and '$(OS)' == 'Windows_NT' and '$(EventideSkipInstaller)' != 'true' and '$(_IsPublishing)' != 'true'">
+    <PropertyGroup>
+      <EventideIscc Condition="Exists('$(MSBuildProgramFiles32)\Inno Setup 6\ISCC.exe')">$(MSBuildProgramFiles32)\Inno Setup 6\ISCC.exe</EventideIscc>
+      <EventideIscc Condition="'$(EventideIscc)' == '' and Exists('$(ProgramW6432)\Inno Setup 6\ISCC.exe')">$(ProgramW6432)\Inno Setup 6\ISCC.exe</EventideIscc>
+      <EventideIscc Condition="'$(EventideIscc)' == '' and Exists('$(LOCALAPPDATA)\Programs\Inno Setup 6\ISCC.exe')">$(LOCALAPPDATA)\Programs\Inno Setup 6\ISCC.exe</EventideIscc>
+      <EventideIss>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\..\build\installer\eventide.iss'))</EventideIss>
+      <EventideArtifacts>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\..\artifacts'))</EventideArtifacts>
+      <EventideSourceDir>$([System.IO.Path]::GetFullPath('$(TargetDir)').TrimEnd('\'))</EventideSourceDir>
+    </PropertyGroup>
+    <Warning Condition="'$(EventideIscc)' == ''" Text="Inno Setup 6 (ISCC.exe) not found – Eventide installer skipped. Install it from https://jrsoftware.org/isinfo.php" />
+    <MakeDir Condition="'$(EventideIscc)' != ''" Directories="$(EventideArtifacts)" />
+    <Exec Condition="'$(EventideIscc)' != ''"
+          Command="&quot;$(EventideIscc)&quot; /Q &quot;/DSourceDir=$(EventideSourceDir)&quot; &quot;/DOutputDir=$(EventideArtifacts)&quot; &quot;$(EventideIss)&quot;" />
+    <Message Condition="'$(EventideIscc)' != ''" Importance="high" Text="Eventide installer: $(EventideArtifacts)\eventide_v$(Version)_setup.exe" />
+  </Target>
+
+</Project>

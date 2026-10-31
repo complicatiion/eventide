@@ -1,0 +1,609 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="using:Eventide.App.SettingsUi"
+        x:Class="Eventide.App.SettingsUi.MainWindow"
+        x:DataType="ui:SettingsViewModel"
+        Title="Eventide"
+        Icon="avares://Eventide/Assets/eventide.ico"
+        Width="980" Height="860" MinWidth="820" MinHeight="600"
+        WindowStartupLocation="CenterScreen"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="PreferSystemChrome"
+        ExtendClientAreaTitleBarHeightHint="44">
+
+  <Grid ColumnDefinitions="236,*">
+
+    <!-- ============================================================ Sidebar -->
+    <Border Background="{DynamicResource BrushBgSidebar}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="0,0,1,0">
+      <DockPanel Margin="14,0,14,16">
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="12" Margin="8,22,0,28"
+                    Background="Transparent" PointerPressed="OnDragAreaPressed">
+          <Image Source="avares://Eventide/Assets/logo-accent.png" Width="38" Height="38" />
+          <StackPanel VerticalAlignment="Center" Spacing="1">
+            <TextBlock Text="Eventide" FontSize="19" FontWeight="SemiBold" TextWrapping="NoWrap" />
+          </StackPanel>
+        </StackPanel>
+
+        <TextBlock DockPanel.Dock="Bottom" Classes="muted small" Margin="10,0" Text="{Binding VersionText}" />
+
+        <StackPanel Spacing="4">
+          <RadioButton Classes="nav" GroupName="nav" IsChecked="{Binding IsStatusPage, Mode=TwoWay}">
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <PathIcon Data="{StaticResource IconStatus}" />
+              <TextBlock Text="{Binding [NavStatus], Source={x:Static ui:Tr.I}}" VerticalAlignment="Center" />
+            </StackPanel>
+          </RadioButton>
+          <RadioButton Classes="nav" GroupName="nav" IsChecked="{Binding IsFilterPage, Mode=TwoWay}">
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <PathIcon Data="{StaticResource IconFilter}" />
+              <TextBlock Text="{Binding [NavFilter], Source={x:Static ui:Tr.I}}" VerticalAlignment="Center" />
+            </StackPanel>
+          </RadioButton>
+          <RadioButton Classes="nav" GroupName="nav" IsChecked="{Binding IsSchedulePage, Mode=TwoWay}">
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <PathIcon Data="{StaticResource IconSchedule}" />
+              <TextBlock Text="{Binding [NavSchedule], Source={x:Static ui:Tr.I}}" VerticalAlignment="Center" />
+            </StackPanel>
+          </RadioButton>
+          <RadioButton Classes="nav" GroupName="nav" IsChecked="{Binding IsGeneralPage, Mode=TwoWay}">
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <PathIcon Data="{StaticResource IconGeneral}" />
+              <TextBlock Text="{Binding [NavGeneral], Source={x:Static ui:Tr.I}}" VerticalAlignment="Center" />
+            </StackPanel>
+          </RadioButton>
+          <Border Classes="divider" Margin="8,10" />
+          <RadioButton Classes="nav" GroupName="nav" IsChecked="{Binding IsAboutPage, Mode=TwoWay}">
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <PathIcon Data="{StaticResource IconAbout}" />
+              <TextBlock Text="{Binding [NavAbout], Source={x:Static ui:Tr.I}}" VerticalAlignment="Center" />
+            </StackPanel>
+          </RadioButton>
+        </StackPanel>
+      </DockPanel>
+    </Border>
+
+    <!-- ============================================================ Content -->
+    <Grid Grid.Column="1" RowDefinitions="44,Auto,*,Auto">
+
+      <!-- Title bar area (caption buttons are drawn by Windows on the right) -->
+      <Border Grid.Row="0" Background="Transparent" PointerPressed="OnDragAreaPressed" />
+
+      <StackPanel Grid.Row="1" Margin="36,4,36,18" Spacing="4">
+        <TextBlock Classes="h1" Text="{Binding PageTitle}" />
+        <TextBlock Classes="muted" Text="{Binding PageSubtitle}" />
+      </StackPanel>
+
+      <ScrollViewer x:Name="PageScroll" Grid.Row="2" HorizontalScrollBarVisibility="Disabled">
+        <Panel Margin="36,0,36,28">
+
+          <!-- ======================================================== Status -->
+          <StackPanel x:Name="PageStatus" Classes="page" Spacing="16" IsVisible="{Binding IsStatusPage}">
+
+            <Border Classes="notice" IsVisible="{Binding !TrayRunning}">
+              <Grid ColumnDefinitions="Auto,*,Auto">
+                <PathIcon Data="{StaticResource IconAlert}" Margin="0,0,12,0" />
+                <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="{Binding [TrayNotRunning], Source={x:Static ui:Tr.I}}" />
+                <Button Grid.Column="2" Classes="primary" Margin="12,0,0,0" Command="{Binding StartTrayCommand}">
+                  <StackPanel Orientation="Horizontal" Spacing="8">
+                    <PathIcon Data="{StaticResource IconPlay}" />
+                    <TextBlock Text="{Binding [BtnStartTray], Source={x:Static ui:Tr.I}}" />
+                  </StackPanel>
+                </Button>
+              </Grid>
+            </Border>
+
+            <Border Classes="hero">
+              <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="Auto,*">
+                <!-- Current screen tint -->
+                <Border Width="72" Height="72" CornerRadius="36" BorderThickness="3"
+                        BorderBrush="{DynamicResource BrushBorder}" Background="{Binding CurrentBrush}" />
+                <StackPanel Grid.Column="1" Margin="22,0,0,0" VerticalAlignment="Center" Spacing="6">
+                  <TextBlock Classes="hero" Text="{Binding StatusHeadline}" />
+                  <TextBlock Classes="muted" Text="{Binding StatusDetail}" />
+                </StackPanel>
+                <!-- On / off: one button for both, right-aligned in the card -->
+                <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal"
+                            HorizontalAlignment="Right" Margin="0,22,0,0">
+                  <Button Classes="primary action" Command="{Binding ToggleFilterCommand}" IsEnabled="{Binding TrayRunning}">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                      <PathIcon Data="{StaticResource IconPower}" />
+                      <TextBlock Text="{Binding ToggleText}" />
+                    </StackPanel>
+                  </Button>
+                </StackPanel>
+              </Grid>
+            </Border>
+
+            <!-- Pause: fixed durations or an own one; the selection is also the default of the tray menu -->
+            <Border Classes="card">
+              <StackPanel Spacing="14">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                  <PathIcon Data="{StaticResource IconPause}" Width="20" Height="20" Foreground="{DynamicResource BrushAccent}" />
+                  <TextBlock Classes="h2" VerticalAlignment="Center" Text="{Binding [SecPause], Source={x:Static ui:Tr.I}}" />
+                </StackPanel>
+
+                <!-- Paused: end time and Resume -->
+                <Grid ColumnDefinitions="*,Auto" IsVisible="{Binding IsPaused}">
+                  <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                    <TextBlock VerticalAlignment="Center" Text="{Binding [PausedUntilLabel], Source={x:Static ui:Tr.I}}" />
+                    <Border Classes="pill">
+                      <TextBlock Text="{Binding PausedTime}" />
+                    </Border>
+                  </StackPanel>
+                  <Button Grid.Column="1" Classes="primary action" Command="{Binding ResumeCommand}">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                      <PathIcon Data="{StaticResource IconPlay}" />
+                      <TextBlock Text="{Binding [BtnResume], Source={x:Static ui:Tr.I}}" />
+                    </StackPanel>
+                  </Button>
+                </Grid>
+
+                <StackPanel Spacing="14" IsVisible="{Binding !IsPaused}">
+                  <WrapPanel Margin="0,0,-8,-8">
+                    <RadioButton Classes="chip" GroupName="pause" Margin="0,0,8,8" IsChecked="{Binding IsPause15, Mode=TwoWay}">
+                      <TextBlock Text="{Binding Pause15Text}" />
+                    </RadioButton>
+                    <RadioButton Classes="chip" GroupName="pause" Margin="0,0,8,8" IsChecked="{Binding IsPause30, Mode=TwoWay}">
+                      <TextBlock Text="{Binding Pause30Text}" />
+                    </RadioButton>
+                    <RadioButton Classes="chip" GroupName="pause" Margin="0,0,8,8" IsChecked="{Binding IsPause60, Mode=TwoWay}">
+                      <TextBlock Text="{Binding Pause60Text}" />
+                    </RadioButton>
+                    <RadioButton Classes="chip" GroupName="pause" Margin="0,0,8,8" IsChecked="{Binding IsPause120, Mode=TwoWay}">
+                      <TextBlock Text="{Binding Pause120Text}" />
+                    </RadioButton>
+                    <RadioButton Classes="chip" GroupName="pause" Margin="0,0,8,8" IsChecked="{Binding IsPause240, Mode=TwoWay}">
+                      <TextBlock Text="{Binding Pause240Text}" />
+                    </RadioButton>
+                    <RadioButton Classes="chip" GroupName="pause" Margin="0,0,8,8" IsChecked="{Binding IsPauseMorning, Mode=TwoWay}">
+                      <TextBlock Text="{Binding [PauseMorning], Source={x:Static ui:Tr.I}}" />
+                    </RadioButton>
+                    <RadioButton Classes="chip" GroupName="pause" Margin="0,0,8,8" IsChecked="{Binding IsPauseCustom, Mode=TwoWay}">
+                      <TextBlock Text="{Binding [PauseCustom], Source={x:Static ui:Tr.I}}" />
+                    </RadioButton>
+                  </WrapPanel>
+                  <Grid ColumnDefinitions="Auto,10,Auto,*,Auto">
+                    <NumericUpDown Width="140" Minimum="1" Maximum="1440" Increment="5" FormatString="0"
+                                   Value="{Binding CustomPauseAmount, Mode=TwoWay}" />
+                    <ComboBox Grid.Column="2" MinWidth="150" SelectedIndex="{Binding CustomPauseUnitIndex, Mode=TwoWay}">
+                      <ComboBoxItem Content="{Binding [UnitMinutes], Source={x:Static ui:Tr.I}}" />
+                      <ComboBoxItem Content="{Binding [UnitHours], Source={x:Static ui:Tr.I}}" />
+                    </ComboBox>
+                    <Button Grid.Column="4" Classes="primary action" Command="{Binding PauseCommand}" IsEnabled="{Binding CanPause}">
+                      <StackPanel Orientation="Horizontal" Spacing="8">
+                        <PathIcon Data="{StaticResource IconPause}" />
+                        <TextBlock Text="{Binding [BtnPause], Source={x:Static ui:Tr.I}}" />
+                      </StackPanel>
+                    </Button>
+                  </Grid>
+                  <Grid ColumnDefinitions="Auto,*">
+                    <PathIcon Classes="info" Data="{StaticResource IconInfoCircle}" />
+                    <TextBlock Grid.Column="1" Classes="muted small" Text="{Binding PauseHintText}" />
+                  </Grid>
+                </StackPanel>
+              </StackPanel>
+            </Border>
+
+            <!-- Tiles -->
+            <UniformGrid Columns="4" Margin="0,0,-12,0">
+              <Border Classes="card" Margin="0,0,12,0">
+                <StackPanel Spacing="8">
+                  <StackPanel Orientation="Horizontal" Spacing="8">
+                    <PathIcon Data="{StaticResource IconMonitor}" Foreground="{DynamicResource BrushAccent}" />
+                    <TextBlock Classes="muted small" Text="{Binding [CurrentKelvin], Source={x:Static ui:Tr.I}}" />
+                  </StackPanel>
+                  <TextBlock Classes="kpi" Text="{Binding CurrentKelvinText}" />
+                </StackPanel>
+              </Border>
+              <Border Classes="card" Margin="0,0,12,0">
+                <StackPanel Spacing="8">
+                  <StackPanel Orientation="Horizontal" Spacing="8">
+                    <PathIcon Data="{StaticResource IconNight}" Foreground="{DynamicResource BrushAccent}" />
+                    <TextBlock Classes="muted small" Text="{Binding [NightValue], Source={x:Static ui:Tr.I}}" />
+                  </StackPanel>
+                  <TextBlock Classes="kpi" Text="{Binding NightKelvinText}" />
+                </StackPanel>
+              </Border>
+              <Border Classes="card" Margin="0,0,12,0">
+                <StackPanel Spacing="8">
+                  <StackPanel Orientation="Horizontal" Spacing="8">
+                    <PathIcon Data="{StaticResource IconSunsetDown}" Foreground="{DynamicResource BrushAccent}" />
+                    <TextBlock Classes="muted small" Text="{Binding [Sunset], Source={x:Static ui:Tr.I}}" />
+                  </StackPanel>
+                  <TextBlock Classes="kpi" Text="{Binding SunsetText}" />
+                </StackPanel>
+              </Border>
+              <Border Classes="card" Margin="0,0,12,0">
+                <StackPanel Spacing="8">
+                  <StackPanel Orientation="Horizontal" Spacing="8">
+                    <PathIcon Data="{StaticResource IconSunsetUp}" Foreground="{DynamicResource BrushAccent}" />
+                    <TextBlock Classes="muted small" Text="{Binding [Sunrise], Source={x:Static ui:Tr.I}}" />
+                  </StackPanel>
+                  <TextBlock Classes="kpi" Text="{Binding SunriseText}" />
+                </StackPanel>
+              </Border>
+            </UniformGrid>
+
+            <Border Classes="card" Padding="20,14">
+              <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+                <PathIcon Data="{StaticResource IconClock}" Foreground="{DynamicResource BrushAccent}" Margin="0,0,10,0" />
+                <TextBlock Grid.Column="1" Classes="muted" VerticalAlignment="Center" Text="{Binding [NextChange], Source={x:Static ui:Tr.I}}" />
+                <TextBlock Grid.Column="2" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,24,0" Text="{Binding NextChangeText}" />
+                <StackPanel Grid.Column="3" Orientation="Horizontal" Spacing="8">
+                  <TextBlock Classes="muted" VerticalAlignment="Center" Text="{Binding [Displays], Source={x:Static ui:Tr.I}}" />
+                  <TextBlock FontWeight="SemiBold" VerticalAlignment="Center" Text="{Binding DisplaysText}" />
+                </StackPanel>
+              </Grid>
+            </Border>
+
+            <ItemsControl ItemsSource="{Binding Notices}">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <StackPanel Spacing="10" />
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="ui:Notice">
+                  <Border Classes="notice" Classes.info="{Binding !IsWarning}">
+                    <Grid ColumnDefinitions="Auto,*">
+                      <PathIcon Data="{StaticResource IconAlert}" Margin="0,0,12,0" VerticalAlignment="Top" />
+                      <TextBlock Grid.Column="1" Text="{Binding Text}" />
+                    </Grid>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+
+          <!-- ======================================================== Schedule -->
+          <StackPanel x:Name="PageSchedule" Classes="page" Spacing="18" IsVisible="{Binding IsSchedulePage}">
+            <StackPanel>
+              <TextBlock Classes="section" Text="{Binding [SecMode], Source={x:Static ui:Tr.I}}" />
+              <UniformGrid Columns="3" Margin="0,0,-12,0">
+                <RadioButton Classes="choice" GroupName="mode" Margin="0,0,12,0" IsChecked="{Binding IsModeAuto, Mode=TwoWay}">
+                  <StackPanel Spacing="8">
+                    <PathIcon Data="{StaticResource IconSunset}" HorizontalAlignment="Left" />
+                    <TextBlock Classes="h2" Text="{Binding [ModeAutoTitle], Source={x:Static ui:Tr.I}}" />
+                    <TextBlock Classes="muted small" Text="{Binding [ModeAutoDesc], Source={x:Static ui:Tr.I}}" />
+                  </StackPanel>
+                </RadioButton>
+                <RadioButton Classes="choice" GroupName="mode" Margin="0,0,12,0" IsChecked="{Binding IsModeSchedule, Mode=TwoWay}">
+                  <StackPanel Spacing="8">
+                    <PathIcon Data="{StaticResource IconClock}" HorizontalAlignment="Left" />
+                    <TextBlock Classes="h2" Text="{Binding [ModeSchedTitle], Source={x:Static ui:Tr.I}}" />
+                    <TextBlock Classes="muted small" Text="{Binding [ModeSchedDesc], Source={x:Static ui:Tr.I}}" />
+                  </StackPanel>
+                </RadioButton>
+                <RadioButton Classes="choice" GroupName="mode" Margin="0,0,12,0" IsChecked="{Binding IsModeAlways, Mode=TwoWay}">
+                  <StackPanel Spacing="8">
+                    <PathIcon Data="{StaticResource IconLightbulb}" HorizontalAlignment="Left" />
+                    <TextBlock Classes="h2" Text="{Binding [ModeAlwaysTitle], Source={x:Static ui:Tr.I}}" />
+                    <TextBlock Classes="muted small" Text="{Binding [ModeAlwaysDesc], Source={x:Static ui:Tr.I}}" />
+                  </StackPanel>
+                </RadioButton>
+              </UniformGrid>
+            </StackPanel>
+
+            <!-- Location (automatic mode) -->
+            <Border Classes="card" IsVisible="{Binding ShowLocation}">
+              <StackPanel Spacing="12">
+                <TextBlock Classes="section" Margin="0" Text="{Binding [SecLocation], Source={x:Static ui:Tr.I}}" />
+                <Grid ColumnDefinitions="*,16,*" RowDefinitions="Auto,Auto">
+                  <TextBlock Classes="muted small" Margin="0,0,0,6" Text="{Binding [Latitude], Source={x:Static ui:Tr.I}}" />
+                  <TextBlock Grid.Column="2" Classes="muted small" Margin="0,0,0,6" Text="{Binding [Longitude], Source={x:Static ui:Tr.I}}" />
+                  <TextBox Grid.Row="1" Watermark="53.08" Text="{Binding LatitudeText, Mode=TwoWay}" />
+                  <TextBox Grid.Row="1" Grid.Column="2" Watermark="8.80" Text="{Binding LongitudeText, Mode=TwoWay}" />
+                </Grid>
+                <Grid ColumnDefinitions="Auto,*">
+                  <PathIcon Classes="info" Data="{StaticResource IconInfoCircle}" />
+                  <TextBlock Grid.Column="1" Classes="muted small" Text="{Binding [LocationHint], Source={x:Static ui:Tr.I}}" />
+                </Grid>
+                <Grid ColumnDefinitions="Auto,*">
+                  <Button Command="{Binding UseWindowsLocationCommand}" IsEnabled="{Binding !LocationBusy}">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                      <PathIcon Data="{StaticResource IconGps}" />
+                      <TextBlock Text="{Binding [BtnWindowsLocation], Source={x:Static ui:Tr.I}}" />
+                    </StackPanel>
+                  </Button>
+                  <!-- Status pill: green = location set, red = failed / denied / invalid, grey = requesting -->
+                  <Border Grid.Column="1" Classes="pill neutral" Classes.ok="{Binding LocationOk}" Classes.danger="{Binding LocationError}"
+                          Margin="14,0,0,0" HorizontalAlignment="Left" IsVisible="{Binding HasLocationMessage}">
+                    <TextBlock TextTrimming="CharacterEllipsis" Text="{Binding LocationMessage}" />
+                  </Border>
+                </Grid>
+                <Grid ColumnDefinitions="Auto,*">
+                  <PathIcon Classes="info" Data="{StaticResource IconInfoCircle}" />
+                  <TextBlock Grid.Column="1" Classes="muted small" Text="{Binding [LocationPrivacy], Source={x:Static ui:Tr.I}}" />
+                </Grid>
+                <Border Classes="divider" Margin="0,4" />
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                  <PathIcon Data="{StaticResource IconSunsetDown}" Foreground="{DynamicResource BrushAccent}" />
+                  <TextBlock VerticalAlignment="Center" Text="{Binding SunPreview}" />
+                </StackPanel>
+              </StackPanel>
+            </Border>
+
+            <!-- Time window (schedule mode) -->
+            <Border Classes="card" IsVisible="{Binding ShowTimes}">
+              <StackPanel Spacing="12">
+                <TextBlock Classes="section" Margin="0" Text="{Binding [SecTimes], Source={x:Static ui:Tr.I}}" />
+                <Grid ColumnDefinitions="Auto,*,32,Auto,*">
+                  <TextBlock Classes="muted" VerticalAlignment="Center" Margin="0,0,12,0" Text="{Binding [From], Source={x:Static ui:Tr.I}}" />
+                  <TimePicker Grid.Column="1" ClockIdentifier="24HourClock" MinuteIncrement="5"
+                              SelectedTime="{Binding ScheduleStart, Mode=TwoWay}" />
+                  <TextBlock Grid.Column="3" Classes="muted" VerticalAlignment="Center" Margin="0,0,12,0" Text="{Binding [To], Source={x:Static ui:Tr.I}}" />
+                  <TimePicker Grid.Column="4" ClockIdentifier="24HourClock" MinuteIncrement="5"
+                              SelectedTime="{Binding ScheduleEnd, Mode=TwoWay}" />
+                </Grid>
+              </StackPanel>
+            </Border>
+
+            <!-- Transition -->
+            <Border Classes="card" IsVisible="{Binding ShowTransition}">
+              <StackPanel Spacing="10">
+                <Grid ColumnDefinitions="*,Auto">
+                  <TextBlock Classes="section" Margin="0" Text="{Binding [SecTransition], Source={x:Static ui:Tr.I}}" />
+                  <Border Grid.Column="1" Classes="pill">
+                    <TextBlock Text="{Binding TransitionText}" />
+                  </Border>
+                </Grid>
+                <Slider Minimum="0" Maximum="120" TickFrequency="5" IsSnapToTickEnabled="True"
+                        Value="{Binding TransitionMinutes, Mode=TwoWay}" />
+                <Grid ColumnDefinitions="Auto,*">
+                  <PathIcon Classes="info" Data="{StaticResource IconInfoCircle}" />
+                  <TextBlock Grid.Column="1" Classes="muted small" Text="{Binding [TransitionHint], Source={x:Static ui:Tr.I}}" />
+                </Grid>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+
+          <!-- ======================================================== Filter -->
+          <StackPanel x:Name="PageFilter" Classes="page" Spacing="18" IsVisible="{Binding IsFilterPage}">
+            <StackPanel>
+              <TextBlock Classes="section" Text="{Binding [SecIntensity], Source={x:Static ui:Tr.I}}" />
+              <UniformGrid Columns="3" Margin="0,0,-12,-12">
+                <RadioButton Classes="choice" GroupName="intensity" Margin="0,0,12,12" IsChecked="{Binding IsSoft, Mode=TwoWay}">
+                  <StackPanel Spacing="6">
+                    <PathIcon Data="{StaticResource IconBulbOutline}" HorizontalAlignment="Left" />
+                    <TextBlock Classes="h2" Text="{Binding [IntSoftTitle], Source={x:Static ui:Tr.I}}" />
+                    <TextBlock Classes="muted small" Text="{Binding [IntSoftDesc], Source={x:Static ui:Tr.I}}" />
+                  </StackPanel>
+                </RadioButton>
+                <RadioButton Classes="choice" GroupName="intensity" Margin="0,0,12,12" IsChecked="{Binding IsMedium, Mode=TwoWay}">
+                  <StackPanel Spacing="6">
+                    <PathIcon Data="{StaticResource IconLightbulb}" HorizontalAlignment="Left" />
+                    <TextBlock Classes="h2" Text="{Binding [IntMediumTitle], Source={x:Static ui:Tr.I}}" />
+                    <TextBlock Classes="muted small" Text="{Binding [IntMediumDesc], Source={x:Static ui:Tr.I}}" />
+                  </StackPanel>
+                </RadioButton>
+                <RadioButton Classes="choice" GroupName="intensity" Margin="0,0,12,12" IsChecked="{Binding IsWarm, Mode=TwoWay}">
+                  <StackPanel Spacing="6">
+                    <PathIcon Data="{StaticResource IconFire}" HorizontalAlignment="Left" />
+                    <TextBlock Classes="h2" Text="{Binding [IntWarmTitle], Source={x:Static ui:Tr.I}}" />
+                    <TextBlock Classes="muted small" Text="{Binding [IntWarmDesc], Source={x:Static ui:Tr.I}}" />
+                  </StackPanel>
+                </RadioButton>
+                <RadioButton Classes="choice" GroupName="intensity" Margin="0,0,12,12" IsChecked="{Binding IsStrong, Mode=TwoWay}">
+                  <StackPanel Spacing="6">
+                    <PathIcon Data="{StaticResource IconNight}" HorizontalAlignment="Left" />
+                    <TextBlock Classes="h2" Text="{Binding [IntStrongTitle], Source={x:Static ui:Tr.I}}" />
+                    <TextBlock Classes="muted small" Text="{Binding [IntStrongDesc], Source={x:Static ui:Tr.I}}" />
+                  </StackPanel>
+                </RadioButton>
+                <RadioButton Classes="choice" GroupName="intensity" Margin="0,0,12,12" IsChecked="{Binding IsExtreme, Mode=TwoWay}">
+                  <StackPanel Spacing="6">
+                    <PathIcon Data="{StaticResource IconCandle}" HorizontalAlignment="Left" />
+                    <TextBlock Classes="h2" Text="{Binding [IntExtremeTitle], Source={x:Static ui:Tr.I}}" />
+                    <TextBlock Classes="muted small" Text="{Binding [IntExtremeDesc], Source={x:Static ui:Tr.I}}" />
+                  </StackPanel>
+                </RadioButton>
+                <RadioButton Classes="choice" GroupName="intensity" Margin="0,0,12,12" IsChecked="{Binding IsCustom, Mode=TwoWay}">
+                  <StackPanel Spacing="6">
+                    <PathIcon Data="{StaticResource IconTune}" HorizontalAlignment="Left" />
+                    <TextBlock Classes="h2" Text="{Binding [IntCustomTitle], Source={x:Static ui:Tr.I}}" />
+                    <TextBlock Classes="muted small" Text="{Binding [IntCustomDesc], Source={x:Static ui:Tr.I}}" />
+                  </StackPanel>
+                </RadioButton>
+              </UniformGrid>
+            </StackPanel>
+
+            <Border Classes="card">
+              <Grid ColumnDefinitions="Auto,*">
+                <!-- What a white area looks like with the night value -->
+                <Border Classes="swatch" Width="104" Height="104" Background="{Binding PreviewBrush}" VerticalAlignment="Top" />
+                <StackPanel Grid.Column="1" Margin="22,0,0,0" Spacing="10">
+                  <Grid ColumnDefinitions="*,Auto">
+                    <TextBlock Classes="section" Margin="0" VerticalAlignment="Center" Text="{Binding [SecCustom], Source={x:Static ui:Tr.I}}" />
+                    <Border Grid.Column="1" Classes="pill">
+                      <TextBlock Text="{Binding NightKelvinText}" />
+                    </Border>
+                  </Grid>
+                  <Slider Minimum="1900" Maximum="6500" TickFrequency="100" IsSnapToTickEnabled="True"
+                          Value="{Binding CustomKelvin, Mode=TwoWay}" />
+                  <Border Height="6" CornerRadius="3" Background="{DynamicResource BrushDusk}" Margin="10,0" />
+                  <Grid ColumnDefinitions="*,*" Margin="10,0">
+                    <TextBlock Classes="muted small" Text="1900 K" />
+                    <TextBlock Grid.Column="1" Classes="muted small" HorizontalAlignment="Right" Text="6500 K" />
+                  </Grid>
+                  <Grid ColumnDefinitions="Auto,*">
+                    <PathIcon Classes="info" Data="{StaticResource IconInfoCircle}" />
+                    <TextBlock Grid.Column="1" Classes="muted small" Text="{Binding [PreviewHint], Source={x:Static ui:Tr.I}}" />
+                  </Grid>
+                  <TextBlock Classes="small" Foreground="{DynamicResource BrushWarning}" IsVisible="{Binding ShowLimitHint}" Text="{Binding LimitHint}" />
+                </StackPanel>
+              </Grid>
+            </Border>
+          </StackPanel>
+
+          <!-- ======================================================== General -->
+          <StackPanel x:Name="PageGeneral" Classes="page" Spacing="16" IsVisible="{Binding IsGeneralPage}">
+            <Border Classes="card">
+              <Grid ColumnDefinitions="Auto,*,Auto">
+                <PathIcon Data="{StaticResource IconRocket}" Width="22" Height="22" Foreground="{DynamicResource BrushAccent}" Margin="0,0,16,0" />
+                <StackPanel Grid.Column="1" Spacing="3" VerticalAlignment="Center">
+                  <TextBlock Classes="h2" Text="{Binding [AutostartTitle], Source={x:Static ui:Tr.I}}" />
+                  <TextBlock Classes="muted small" Text="{Binding [AutostartDesc], Source={x:Static ui:Tr.I}}" />
+                </StackPanel>
+                <ToggleSwitch Grid.Column="2" VerticalAlignment="Center" IsChecked="{Binding Autostart, Mode=TwoWay}" />
+              </Grid>
+            </Border>
+
+            <Border Classes="card">
+              <Grid ColumnDefinitions="Auto,*,Auto">
+                <PathIcon Data="{StaticResource IconTranslate}" Width="22" Height="22" Foreground="{DynamicResource BrushAccent}" Margin="0,0,16,0" />
+                <TextBlock Grid.Column="1" Classes="h2" VerticalAlignment="Center" Text="{Binding [SecLanguage], Source={x:Static ui:Tr.I}}" />
+                <ComboBox Grid.Column="2" ItemsSource="{Binding Languages}" SelectedIndex="{Binding LanguageIndex, Mode=TwoWay}">
+                  <ComboBox.ItemTemplate>
+                    <DataTemplate x:DataType="ui:LanguageOption">
+                      <StackPanel Orientation="Horizontal" Spacing="10">
+                        <!-- Flat 2D flag (UK / DE); "Automatic" shows a globe -->
+                        <Image Source="{Binding Flag}" Width="21" Height="14" VerticalAlignment="Center" IsVisible="{Binding HasFlag}" />
+                        <PathIcon Data="{StaticResource IconEarth}" Width="16" Height="16" Margin="2,0,3,0"
+                                  Foreground="{DynamicResource BrushAccent}" IsVisible="{Binding IsAuto}" />
+                        <TextBlock Text="{Binding Name}" VerticalAlignment="Center" TextWrapping="NoWrap" />
+                      </StackPanel>
+                    </DataTemplate>
+                  </ComboBox.ItemTemplate>
+                </ComboBox>
+              </Grid>
+            </Border>
+
+            <Border Classes="card">
+              <Grid ColumnDefinitions="Auto,*">
+                <PathIcon Data="{StaticResource IconShieldKey}" Width="22" Height="22" Foreground="{DynamicResource BrushAccent}" Margin="0,0,16,0" VerticalAlignment="Top" />
+                <StackPanel Grid.Column="1" Spacing="10">
+                  <Grid ColumnDefinitions="*,Auto">
+                    <TextBlock Classes="h2" VerticalAlignment="Center" Text="{Binding [SecGamma], Source={x:Static ui:Tr.I}}" />
+                    <Border Grid.Column="1" Classes="pill" Classes.neutral="{Binding !GammaExtended}">
+                      <TextBlock Text="{Binding GammaStateText}" />
+                    </Border>
+                  </Grid>
+                  <Grid ColumnDefinitions="Auto,*">
+                    <PathIcon Classes="info" Data="{StaticResource IconInfoCircle}" />
+                    <TextBlock Grid.Column="1" Classes="muted small" Text="{Binding [GammaDesc], Source={x:Static ui:Tr.I}}" />
+                  </Grid>
+                  <Grid ColumnDefinitions="*,Auto">
+                    <TextBlock Classes="small accent" VerticalAlignment="Center" Margin="0,0,16,0" Text="{Binding GammaMessage}" />
+                    <!-- Enable (main action) on top, Disable below; same width as "Open folder" -->
+                    <StackPanel Grid.Column="1" Spacing="8">
+                      <Button Classes="primary wide" Command="{Binding EnableGammaCommand}" IsEnabled="{Binding CanEnableGamma}"
+                              ToolTip.Tip="{Binding [GammaAdminHint], Source={x:Static ui:Tr.I}}">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                          <PathIcon Data="{StaticResource IconShieldKey}" />
+                          <TextBlock Text="{Binding [BtnGammaEnable], Source={x:Static ui:Tr.I}}" />
+                        </StackPanel>
+                      </Button>
+                      <Button Classes="wide" Command="{Binding DisableGammaCommand}" IsEnabled="{Binding CanDisableGamma}">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                          <PathIcon Data="{StaticResource IconRestore}" />
+                          <TextBlock Text="{Binding [BtnGammaDisable], Source={x:Static ui:Tr.I}}" />
+                        </StackPanel>
+                      </Button>
+                    </StackPanel>
+                  </Grid>
+                </StackPanel>
+              </Grid>
+            </Border>
+
+            <Border Classes="card">
+              <Grid ColumnDefinitions="Auto,*,Auto">
+                <PathIcon Data="{StaticResource IconFolderOpen}" Width="22" Height="22" Foreground="{DynamicResource BrushAccent}" Margin="0,0,16,0" />
+                <StackPanel Grid.Column="1" Spacing="8" VerticalAlignment="Center" Margin="0,0,16,0">
+                  <StackPanel Orientation="Horizontal" Spacing="10">
+                    <TextBlock Classes="h2" Text="{Binding [SettingsFile], Source={x:Static ui:Tr.I}}" />
+                    <Border Classes="pill" IsVisible="{Binding IsPortable}">
+                      <TextBlock Text="{Binding [PortableMode], Source={x:Static ui:Tr.I}}" />
+                    </Border>
+                  </StackPanel>
+                  <Border Classes="pill neutral" HorizontalAlignment="Left" ToolTip.Tip="{Binding SettingsFilePath}">
+                    <TextBlock Classes="mono" TextTrimming="CharacterEllipsis" Text="{Binding SettingsFilePath}" />
+                  </Border>
+                </StackPanel>
+                <Button Grid.Column="2" Classes="wide" Command="{Binding OpenDataFolderCommand}" VerticalAlignment="Center">
+                  <StackPanel Orientation="Horizontal" Spacing="8">
+                    <PathIcon Data="{StaticResource IconFolderOpen}" />
+                    <TextBlock Text="{Binding [BtnOpenFolder], Source={x:Static ui:Tr.I}}" />
+                  </StackPanel>
+                </Button>
+              </Grid>
+            </Border>
+          </StackPanel>
+
+          <!-- ======================================================== About -->
+          <StackPanel x:Name="PageAbout" Classes="page" Spacing="16" IsVisible="{Binding IsAboutPage}">
+            <Border Classes="hero">
+              <Grid ColumnDefinitions="Auto,*">
+                <Image Source="avares://Eventide/Assets/app-256.png" Width="96" Height="96" VerticalAlignment="Top" />
+                <StackPanel Grid.Column="1" Margin="24,0,0,0" Spacing="6">
+                  <TextBlock Text="Eventide" FontSize="28" FontWeight="SemiBold" Foreground="{DynamicResource BrushHighlight}" />
+                  <TextBlock Classes="accent" FontWeight="SemiBold" Text="{Binding VersionText}" />
+                  <TextBlock Classes="accent" Margin="0,6,0,0" Text="{Binding [LicenseLine], Source={x:Static ui:Tr.I}}" />
+                </StackPanel>
+              </Grid>
+            </Border>
+
+            <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
+              <Button Command="{Binding OpenLicensesCommand}">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                  <PathIcon Data="{StaticResource IconLicense}" />
+                  <TextBlock Text="{Binding [BtnLicenses], Source={x:Static ui:Tr.I}}" />
+                </StackPanel>
+              </Button>
+              <Button Command="{Binding OpenWebsiteCommand}">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                  <PathIcon Data="{StaticResource IconWeb}" />
+                  <TextBlock Text="{Binding [BtnWebsite], Source={x:Static ui:Tr.I}}" />
+                </StackPanel>
+              </Button>
+              <Button Command="{Binding OpenGitHubCommand}">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                  <PathIcon Data="{StaticResource IconGithub}" />
+                  <TextBlock Text="{Binding [BtnGitHub], Source={x:Static ui:Tr.I}}" />
+                </StackPanel>
+              </Button>
+            </StackPanel>
+
+            <Border Classes="card">
+              <StackPanel Spacing="6" HorizontalAlignment="Center">
+                <TextBlock Classes="section" Margin="0" HorizontalAlignment="Center" TextAlignment="Center"
+                           Text="{Binding [ThirdParty], Source={x:Static ui:Tr.I}}" />
+                <TextBlock Classes="muted" FontSize="14" HorizontalAlignment="Center" TextAlignment="Center"
+                           Text="{Binding [ThirdPartyList], Source={x:Static ui:Tr.I}}" />
+              </StackPanel>
+            </Border>
+          </StackPanel>
+
+        </Panel>
+      </ScrollViewer>
+
+      <!-- ============================================================ Footer: Discard left, Save (main action) right -->
+      <Border Grid.Row="3" IsVisible="{Binding ShowFooter}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="0,1,0,0"
+              Background="{DynamicResource BrushBgSidebar}" Padding="36,12">
+        <Grid ColumnDefinitions="*,Auto">
+          <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+            <Border Classes="pill neutral" IsVisible="{Binding IsDirty}">
+              <TextBlock Text="{Binding [Unsaved], Source={x:Static ui:Tr.I}}" />
+            </Border>
+            <Border Classes="pill" IsVisible="{Binding SavedRecently}">
+              <TextBlock Text="{Binding [Saved], Source={x:Static ui:Tr.I}}" />
+            </Border>
+          </StackPanel>
+          <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10">
+            <Button Command="{Binding DiscardCommand}" IsEnabled="{Binding IsDirty}">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <PathIcon Data="{StaticResource IconUndo}" />
+                <TextBlock Text="{Binding [BtnDiscard], Source={x:Static ui:Tr.I}}" />
+              </StackPanel>
+            </Button>
+            <Button Classes="primary" Command="{Binding SaveCommand}" IsEnabled="{Binding IsDirty}">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <PathIcon Data="{StaticResource IconSave}" />
+                <TextBlock Text="{Binding [BtnSave], Source={x:Static ui:Tr.I}}" />
+              </StackPanel>
+            </Button>
+          </StackPanel>
+        </Grid>
+      </Border>
+    </Grid>
+  </Grid>
+</Window>
