@@ -1,6 +1,6 @@
 ![Eventide](/preview/favicon.png)
 
-# Eventide
+# Eventide Bluelight Filter
 
 Eventide changes the colour temperature of all your displays the same way f.lux does, through the display gamma ramp. The blue share is reduced; red and green mostly stay. You decide when this happens: automatically between sunset and sunrise at your location, in a fixed time window (e.g. 21:00 – 07:00), or all the time. The tray icon shows the state at a glance, a left click switches the filter on or off, and a right click opens the menu with the settings on top.
 
